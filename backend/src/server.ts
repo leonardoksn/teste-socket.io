@@ -1,21 +1,25 @@
-import Koa from 'koa'
+import express from 'express'
 import http from 'http'
-import cors from '@koa/cors';
-import { Server } from "socket.io";
-const app = new Koa();
+import cors from 'cors';
+import { Server } from 'socket.io';
+const app = express()
 app.use(cors());
 
-const server = http.createServer(app.callback())
+const server = http.createServer(app)
 const io = new Server(server)
 
 const SERVER_PORT = 8080;
 const SERVER_HOST = 'localhost';
 
+app.get('/' , (req,res) => {
+    res.send('Apenas')
+})
+
 io.on('connection', (socket) => {
     console.log("[IO] Connection => Server has a new connection")
     socket.on('chat.message', data => {
-        console.log('[SOCKET] Chat.message => ',data)
-        io.emit('chat.message',data)
+        console.log('[SOCKET] Chat.message => ', data)
+        io.emit('chat.message', data)
     })
     socket.on('disconnect', () => {
         console.log('[SOCKET] Disconnect => A connection was disconected')
